@@ -1,0 +1,6 @@
+[submodule "rusmikan-kernel"]
+	path = rusmikan-kernel
+	url = git@github.com:YsuOS/rusmikan-kernel.git
+[submodule "rusmikan-loader"]
+	path = rusmikan-loader
+	url = git@github.com:YsuOS/rusmikan-loader.git
