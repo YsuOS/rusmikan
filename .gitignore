@@ -1,4 +1,3 @@
 /target
 /Cargo.lock
 /tags
-/tools/OVMF_VARS.fd
