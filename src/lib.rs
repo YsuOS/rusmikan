@@ -3,8 +3,8 @@
 use uefi::proto::console::gop::FrameBuffer;
 
 pub enum PixelFormat {
-    PixelRGBResv8BitPerColor,
-    PixelBGRResv8BitPerColor,
+    RGB,
+    BGR,
 }
 
 pub struct FrameBufferConfig<'gop> {
