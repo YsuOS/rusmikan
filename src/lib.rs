@@ -1,4 +1,5 @@
 #![no_std]
+use core::slice;
 
 pub enum PixelFormat {
     RGB,
@@ -21,4 +22,21 @@ pub struct FrameBufferConfig {
     pub horizontal_resolution: usize,
     pub vertical_resolution: usize,
     pub pixel_format: PixelFormat,
+}
+
+#[derive(Debug)]
+pub struct MemoryMap {
+    pub descriptors: *const MemoryDescriptor,
+    pub descriptor_len: u64,
+}
+
+impl MemoryMap {
+    pub fn descriptors(&self) -> &[MemoryDescriptor] {
+        unsafe { slice::from_raw_parts(self.descriptors, self.descriptor_len as usize) }
+    }
+}
+
+#[derive(Debug)]
+pub struct MemoryDescriptor {
+    pub phys_start: u64,
 }
