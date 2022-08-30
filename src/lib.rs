@@ -42,4 +42,5 @@ impl MemoryMap {
 #[derive(Debug)]
 pub struct MemoryDescriptor {
     pub phys_start: u64,
+    pub phys_end: u64,
 }
