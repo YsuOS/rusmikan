@@ -1,11 +1,13 @@
 #![no_std]
 use core::slice;
 
+#[derive(Clone, Copy)]
 pub enum PixelFormat {
     RGB,
     BGR,
 }
 
+#[derive(Clone, Copy)]
 pub struct FrameBuffer {
     pub base: *mut u8,
 }
@@ -16,6 +18,7 @@ impl FrameBuffer {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct FrameBufferConfig {
     pub frame_buffer: FrameBuffer,
     pub pixels_per_scan_line: usize,
