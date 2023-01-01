@@ -21,4 +21,5 @@ qemu-system-x86_64 \
     -drive if=pflash,format=raw,file=$DEVENV_DIR/OVMF_VARS.fd \
     -drive if=ide,index=0,media=disk,format=raw,file=$DISK_IMG \
     -serial stdio \
+    -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
     $QEMU_OPTS
