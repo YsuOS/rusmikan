@@ -13,8 +13,8 @@ pub struct FrameBuffer {
 }
 
 impl FrameBuffer {
-    pub unsafe fn write_value(&mut self, index: usize, val: [u8;3]) {
-        (self.base.add(index) as *mut [u8;3]).write_volatile(val)
+    pub unsafe fn write_value(&mut self, index: usize, val: [u8; 3]) {
+        (self.base.add(index) as *mut [u8; 3]).write_volatile(val)
     }
 }
 
