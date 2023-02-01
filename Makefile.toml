@@ -1,66 +1,78 @@
 [tasks.default]
-# https://github.com/sagiegurari/cargo-make/issues/56#issuecomment-354702224
-description = "Overwrite default task"
-alias = "build_all"
+clear = true
+command = "echo"
+args = ["\n\nDisable default task!\nUsage: cargo make <build/run/clean/image/test>\n\n"]
 
-[tasks.clean]
-description = "Overwrite clean task"
-alias = "clean_all"
-
-[tasks.build_rusmikan]
-description = "Build rusmikan"
-command = "cargo"
-args = ["build"]
-
-[tasks.build_kernel]
-description = "Build rusmikan-kernel"
-dependencies = ["build_rusmikan"]
-command = "cargo"
-args = ["make", "--cwd", "rusmikan-kernel", "build"]
-
-[tasks.build_loader]
-description = "Build rusmikan-loader"
-dependencies = ["build_rusmikan"]
-command = "cargo"
-args = ["make", "--cwd", "rusmikan-loader", "build"]
-
-[tasks.build_all]
-description = "Build all"
+[tasks.build]
+description = "Build all projects"
 dependencies = ["build_kernel", "build_loader"]
 
-[tasks.clean_kernel]
-description = "Remove artifacts in rusmikan-kernel"
-command = "cargo"
-args = ["make", "--cwd", "rusmikan-kernel", "clean"]
+[tasks.run]
+description = "Run rusmikan on qemu"
+dependencies = ["build"]
+script = '''
+tools/run_qemu.sh \
+rusmikan-loader/target/x86_64-unknown-uefi/debug/rusmikan-loader.efi \
+rusmikan-kernel/target/x86_64-rusmikan/debug/kernel.elf
+'''
 
-[tasks.clean_loader]
-description = "Remove artifacts in rusmikan-loader"
-command = "cargo"
-args = ["make", "--cwd", "rusmikan-loader", "clean"]
-
-[tasks.clean_image]
-description = "Remove image file"
-command = "rm"
-args = ["disk.img"]
-
-[tasks.clean_all]
+[tasks.clean]
 description = "Remove all artifacts"
 dependencies = ["clean_kernel", "clean_loader", "clean_image"]
 
-[tasks.build_image]
+[tasks.image]
 description = "Build image"
-dependencies = ["build_all"]
+dependencies = ["build"]
 script = '''
 tools/make_image.sh ./target/debug/disk.img /tmp/mnt \
 rusmikan-loader/target/x86_64-unknown-uefi/debug/rusmikan-loader.efi \
 rusmikan-kernel/target/x86_64-rusmikan/debug/kernel.elf
 '''
 
-[tasks.run]
-description = "Run kernel on qemu"
-dependencies = ["build_all"]
+[tasks.test]
+clear = true
+# TODO: Add test for loader and rusmikan. Test supports only kernel
+description = "Test rusmikan"
+dependencies = ["test_kernel"]
 script = '''
-tools/run_qemu.sh \
-rusmikan-loader/target/x86_64-unknown-uefi/debug/rusmikan-loader.efi \
-rusmikan-kernel/target/x86_64-rusmikan/debug/kernel.elf
+tools/run_test.sh
 '''
+
+
+# ## Private tasks ##
+[tasks.build_kernel]
+private = true
+description = "Build rusmikan-kernel"
+command = "cargo"
+args = ["make", "--cwd", "rusmikan-kernel", "build"]
+
+[tasks.build_loader]
+private = true
+description = "Build rusmikan-loader"
+command = "cargo"
+args = ["make", "--cwd", "rusmikan-loader", "build"]
+
+[tasks.clean_kernel]
+private = true
+description = "Remove artifacts in rusmikan-kernel"
+command = "cargo"
+args = ["make", "--cwd", "rusmikan-kernel", "clean"]
+
+[tasks.clean_loader]
+private = true
+description = "Remove artifacts in rusmikan-loader"
+command = "cargo"
+args = ["make", "--cwd", "rusmikan-loader", "clean"]
+
+[tasks.clean_image]
+private = true
+description = "Remove image file"
+command = "rm"
+args = ["disk.img"]
+
+[tasks.test_kernel]
+private = true
+description = "Build test kernel"
+command = "cargo"
+args = ["make", "--cwd", "rusmikan-kernel", "test"]
+
